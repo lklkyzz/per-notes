@@ -1,0 +1,31 @@
+//git中最常用的几种交换数据的命令
+        第一个：git clone
+        git clone <版本库名> <本地库名>
+        例：git clone git@github.com:lklkyzz/learn.git base-cmd
+        或：git clone https://github.com/lklkyzz/learn.git
+        clone命令是完全复制原始目录，它还支持多种写法，这里只写ssh和http
+        git clone -o <自定义主机名> <地址>
+
+        第二个：git fetch
+        当远程主机有更新时，可以将这些更新取回本地
+        git fetch <远程主机名> <分支名>
+        例：git fetch origin master或者dev等其他分支
+        因为远程分支与本地分支同名，所以用  远程主机/分支名 来表示，如origin/master 表示origin远程主机下的master
+        fetch下来的分支通常会与本地分支进行合并，可用以下命令
+        git merge 远程主机/分支名 或者 git rebase 远程主机/分支名
+
+        第三个：git pull
+        pull命令的作用是取回远程主机某个分支并进行合并
+        git pull <远程主机名> <远程分支名>:<本地分支名>
+        例：git pull origin master:master 当前分支为你要合并的分支时，可省略<本地分支名>，如
+        当前分支为master        git pull origin master
+
+        第四个：git push
+        push将本地数据推送到远程仓库进行合并
+
+        第五个：git remote
+        为了方便管理，git要求给每个远程主机指定一个主机名，即把较长的主机名简化
+        git remote add <主机名> 主机地址
+        关联分支
+        git branch --set-upstream 本地分支名 远程主机名/远程分支
+        关联后，推送可以省略分支名，只需要主机名

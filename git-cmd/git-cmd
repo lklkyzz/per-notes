@@ -1,0 +1,97 @@
+        git init        初识化当前文件夹作为仓库
+        git add file    将file缓存到缓存区准备提交到库
+        git status      查看仓库状况
+        git commit -m "注释"    提交到库
+        git remote || git remote -v     显示远程仓库信息
+
+//版本查看与回溯
+        git diff file   当git status显示文件被修改过，可用这个命令查看different
+        git log
+        git log --oneline       显示以往版本信息
+        git reset --hard "编号"         版本回溯
+        git reflog      显示历史操作
+        git checkout -- file    让file回复到上一次add或commit动作的时候(注意符号"--")
+        git reset HEAD file     让缓存区回到工作区，工作区的修改还存在，即撤销了提交动作
+
+//连接远程仓库
+        第一步，创建、查找秘钥
+        ssh-keygen -t rsa -C "邮箱"
+        第二步，将主目录下的.ssh/id_rsa.pub复制到远程服务器
+        第三步，关联仓库
+        git remote add origin git@github.com:lklkyzz/仓库名.git
+        第四步，将本地数据推送至远程服务器
+        git push -u origin master       -u是让本地库与远程库进行关联
+        git push origin master
+
+//从远程库克隆库到本地
+        git clone git@远程库:远程库的路径
+
+//创建与合并分支
+        创建分支
+        git checkout -b dirname = git branch branch-name | git checkout branch-name
+        查看当前分支
+        git branch
+        合并分支
+        git merge branch-name       将branch-name合并到当前分支
+        删除分支
+        git branch -d branch-name
+
+//解决冲突,查看status修改两个分支有冲突的地方
+        git status
+        git log --graph         查看分支合并图
+
+//分支管理
+        git merge --no--ff -m "" <branch>      不知道这个的意义
+        通常master分支用来发布版本，工作分支应该是在dev上
+        
+//暂时封存当前工作状态，以进行其他工作，如修复其他分支bug
+        git stash
+        git stash list
+        git stash apply         恢复但不会删除
+        git stash drop          删除stash
+        git stash pop           恢复并删除
+        git stash apply stash@{num}     恢复指定num的stash
+
+//多人协作的冲突问题
+        通常工作分支为branch-name(dev)
+        1、你可以用     git push origin branch-name     推送你修改
+        2、如果推送失败，则因为远程分支比你的本地版本更高，则需要       git pull        拉到本地尝试合并
+        3、如果pull失败，并提示no tracking 则说明本地分支与远程分支的链接关系没有创建，使用命令
+        git branch --set-upstream branch-name origin/branch-name        重点，分支的链接，本地仓库关联远程仓库意义类似
+
+//给分支贴上标签
+        git tag <name>       例：git tag v1.0
+        git tag         查看标签列表
+        git log --online --abbrev-commit       commit id信息
+        git tag commit id
+        git show <tagname>
+        git -a tagname -m "注释说明"    -a指定标签名
+        git tag -d <tagname>      删除标签
+        因为创建的标签都只存储在本地，不会自动推送到远程
+        git push origin <tagname>
+        git push origin --tags  推送所有标签
+        删除远程标签，首先删除本地，再删远程
+        git push origin :refs/tags/<tagname>
+
+//配置
+        设置别名
+        git config --global alias.<newname> <oldname>   global是全局设置
+        单个仓库的配置
+        .git/config
+
+//设置服务器
+        1、adduser git
+        2、将本地公共秘钥添加到git下的 .ssh/authorized_keys 里，最好用cat命令获取秘钥
+        本地公共秘钥地址  .ssh/id_rsa.pub
+        3、禁止用户登录git软件,为了安全
+        vi /etc/password，将git的shell添加到第七项中，通常为/usr/local/bin/git-shell
+        4、创建一个库
+        mkdir dirname   //特别注意，将dirname的权限改为git所有
+        git init --bare dirname         初始化库
+        5、在本地目录克隆服务器库、或将本地已有的库关联服务器库
+        git clone git@servername:dir-path
+        git remote add origin git@servername:dir-path
+
+git分为工作区(working directory)与版本库(repository)
+工作区有隐藏目录(.git),它不是工作区，是git版本库。
+库由暂存区(index或stage)与HEAD指引的master组成(第一支master自动创建)
